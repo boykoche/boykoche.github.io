@@ -2,50 +2,75 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Тестовий сайт з GTM</title>
-
-    <!-- Google Tag Manager -->
-    <script>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id=GTM-XXXXXXX'+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-XXXXXXX');
-    </script>
-    <!-- End Google Tag Manager -->
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Мій простий сайт</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #333;
         }
+
+        h1 {
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
         button {
-            padding: 12px 24px;
+            padding: 15px 30px;
             font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #333;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
-<!-- End Google Tag Manager (noscript) -->
 
-<h1>Привіт із тестового сайту!</h1>
-<button id="cta-button">Натисни мене</button>
+<h1>Ласкаво просимо на мій тестовий сайт</h1>
 
-<script>
-    // Просто для перевірки – виклик події вручну
-    document.getElementById('cta-button').addEventListener('click', function() {
-        dataLayer.push({
-            event: 'cta_click',
-            button_text: 'Натисни мене'
-        });
-    });
-</script>
+<div class="button-container">
+    <button id="btn1">Кнопка 1</button>
+    <button id="btn2">Кнопка 2</button>
+    <button id="btn3">Кнопка 3</button>
+    <button id="btn4">Кнопка 4</button>
+    <button id="btn5">Кнопка 5</button>
+</div>
+
+<footer>
+    &copy; 2025 Мій тестовий сайт
+</footer>
+
 </body>
 </html>
