@@ -1,94 +1,435 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Мій простий сайт</title>
-
-    <!-- Google Tag Manager -->
-    <script>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-PRGQNGDB');
-    </script>
-    <!-- End Google Tag Manager -->
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Колесо побажань</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            color: #333;
+        :root { --size: 320px; }
+
+        body{
+            font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+            margin:0; min-height:100vh; display:grid; place-items:center;
+            background:#0f172a; color:#e2e8f0;
+            overflow:hidden;
+        }
+        .wrap{ width:min(92vw,520px); text-align:center; }
+        h1{ font-size:20px; margin:0 0 12px; font-weight:650; }
+
+        .wheel-area{
+            position:relative;
+            display:grid;
+            place-items:center;
+            margin:16px auto;
+            width: var(--size);
+            height: var(--size);
+            transform: perspective(900px);
         }
 
-        h1 {
-            margin-bottom: 40px;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+        .pointer{
+            position:absolute; top:-12px; left:50%;
+            transform:translateX(-50%);
+            width:0; height:0;
+            border-left: 12px solid transparent;
+            border-right:12px solid transparent;
+            border-bottom:18px solid #fbbf24;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,.35));
+            z-index: 60;
+            transform-origin: 50% 100%;
         }
 
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
+        /* короткий “shake” стрілки */
+        .pointer.tick{
+            animation: pointerTick 110ms ease-out both;
+        }
+        @keyframes pointerTick{
+            0%   { transform: translateX(-50%) rotate(0deg); }
+            35%  { transform: translateX(-50%) rotate(-7deg); }
+            70%  { transform: translateX(-50%) rotate(5deg); }
+            100% { transform: translateX(-50%) rotate(0deg); }
         }
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            background: #ffffff;
-            color: #333;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* основа/“товщина” */
+        .wheel-base{
+            position:absolute; inset:0;
+            border-radius:50%;
+            background:
+                    radial-gradient(circle at 35% 28%, rgba(255,255,255,.10), transparent 48%),
+                    radial-gradient(circle at 50% 78%, rgba(0,0,0,.55), transparent 60%),
+                    linear-gradient(to bottom, rgba(255,255,255,.06), rgba(0,0,0,.22));
+            transform: translateY(12px) rotateX(10deg);
+            z-index: 1;
+            box-shadow: 0 28px 70px rgba(0,0,0,.55);
         }
 
-        button:hover {
-            background: #f0f0f0;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        /* ротор (крутиться все всередині) */
+        .wheel-rotor{
+            position:absolute; inset:0;
+            border-radius:50%;
+            z-index: 10;
+            transform: rotate(0deg) translateZ(0);
+            transition: transform 4.6s cubic-bezier(.14,.86,.18,1.08);
+            will-change: transform;
         }
 
-        footer {
-            position: absolute;
-            bottom: 20px;
-            font-size: 14px;
-            color: #666;
+        /* кольорове колесо */
+        .wheel-face{
+            position:absolute; inset:0;
+            border-radius:50%;
+            background: conic-gradient(
+                    from -90deg,
+                    #a78bfa 0deg 45deg,
+                    #22d3ee 45deg 90deg,
+                    #f472b6 90deg 135deg,
+                    #4ade80 135deg 180deg,
+                    #60a5fa 180deg 225deg,
+                    #34d399 225deg 270deg,
+                    #fbbf24 270deg 315deg,
+                    #fb7185 315deg 360deg
+            );
+            box-shadow:
+                    0 0 0 10px rgba(255,255,255,.09),
+                    0 20px 60px rgba(0,0,0,.45),
+                    inset 0 0 22px rgba(15,23,42,.95);
+            overflow:hidden;
+            z-index: 10;
+        }
+
+        /* Заглиблення між секторами (канавки по межах) */
+        .wheel-grooves{
+            position:absolute; inset:0;
+            border-radius:50%;
+            pointer-events:none;
+            z-index: 20;
+            background:
+                    repeating-conic-gradient(
+                            from -90deg,
+                            rgba(0,0,0,.48) 0deg 0.9deg,
+                            rgba(255,255,255,.10) 0.9deg 1.7deg,
+                            transparent 1.7deg 45deg
+                    );
+            opacity: .95;
+            filter: blur(.25px);
+            box-shadow: inset 0 0 18px rgba(0,0,0,.35);
+            mix-blend-mode: multiply;
+        }
+
+        /* “Вирізи” (лунки) в кожному секторі */
+        .cutouts{
+            position:absolute; inset:0;
+            border-radius:50%;
+            pointer-events:none;
+            z-index: 30;
+        }
+        .cutout{
+            position:absolute;
+            left:50%;
+            top:50%;
+            width:22px;
+            height:22px;
+            border-radius: 50%;
+
+            /* КЛЮЧОВЕ: центр елемента = центр трансформацій */
+            transform-origin: 50% 50%;
+
+            background: rgba(0,0,0,.28);
+            mix-blend-mode: multiply;
+
+            box-shadow:
+                    inset 0 2px 5px rgba(0,0,0,.55),
+                    inset 0 -1px 3px rgba(255,255,255,.08);
+
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        /* Загальний глянець/обʼєм на ВСЬОМУ колесі */
+        .wheel-volume{
+            position:absolute; inset:0;
+            border-radius:50%;
+            pointer-events:none;
+            z-index: 40;
+            background:
+                    radial-gradient(circle at 28% 22%, rgba(255,255,255,.26), transparent 45%),
+                    radial-gradient(circle at 50% 58%, rgba(0,0,0,.60) 62%, transparent 88%),
+                    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06) 0, transparent 55%);
+            box-shadow: inset 0 0 28px rgba(0,0,0,.65);
+            mix-blend-mode: screen;
+            opacity: .95;
+        }
+
+        .hub{
+            position:absolute; left:50%; top:50%;
+            transform:translate(-50%,-50%);
+            width: 88px; height: 88px;
+            border-radius:50%;
+            background: rgba(15,23,42,.86);
+            border: 2px solid rgba(255,255,255,.14);
+            display:grid; place-items:center;
+            z-index: 55;
+            backdrop-filter: blur(6px);
+            box-shadow:
+                    inset 0 10px 18px rgba(255,255,255,.06),
+                    inset 0 -12px 18px rgba(0,0,0,.35);
+        }
+
+        button{
+            appearance:none; border:0; cursor:pointer;
+            padding:12px 16px; border-radius:14px;
+            background:#38bdf8; color:#082f49; font-weight:800;
+            box-shadow: 0 10px 30px rgba(56,189,248,.25);
+            transition: transform .12s ease;
+        }
+        button:active{ transform: translateY(1px) scale(.99); }
+        button:disabled{ opacity:.55; cursor:not-allowed; }
+
+        .result{
+            margin-top:14px;
+            padding:14px 16px;
+            border-radius:16px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.10);
+            min-height: 52px;
+            display:grid; place-items:center;
+            position: relative;
+        }
+
+        .result.pop{ animation: popIn .55s cubic-bezier(.2,.9,.2,1.2) both; }
+        @keyframes popIn{
+            0%   { transform: translateY(8px) scale(.94); opacity: .2; }
+            60%  { transform: translateY(-2px) scale(1.03); opacity: 1; }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        #confetti{
+            position: fixed;
+            inset: 0;
+            pointer-events:none;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
+<canvas id="confetti"></canvas>
 
-<!-- Google Tag Manager (noscript) -->
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PRGQNGDB"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
-<!-- End Google Tag Manager (noscript) -->
+<div class="wrap">
+    <h1>Колесо побажань 🎡</h1>
 
-<h1>Ласкаво просимо на мій тестовий сайт</h1>
+    <div class="wheel-area">
+        <div id="pointer" class="pointer"></div>
+        <div class="wheel-base"></div>
 
-<div class="button-container">
-    <button id="btn1">Кнопка 1</button>
-    <button id="btn2">Кнопка 2</button>
-    <button id="btn3">Кнопка 3</button>
-    <button id="btn4">Кнопка 4</button>
-    <button id="btn5">Кнопка 5</button>
+        <div id="rotor" class="wheel-rotor">
+            <div class="wheel-face"></div>
+            <div class="wheel-grooves"></div>
+            <div id="cutouts" class="cutouts"></div>
+            <div class="wheel-volume"></div>
+        </div>
+
+        <div class="hub">
+            <button id="spinBtn">Крутити</button>
+        </div>
+    </div>
+
+    <div id="result" class="result">Натисни “Крутити”, щоб отримати побажання ✨</div>
 </div>
 
-<footer>
-    &copy; 2025 Мій тестовий сайт
-</footer>
+<script>
+    const WISHES = [
+        "Нехай сьогодні буде легше, ніж учора",
+        "Тобі пощастить у найважливіший момент",
+        "Знайдеш правильне рішення швидше, ніж думаєш",
+        "Нехай буде багато сил і спокою",
+        "Твій день принесе приємний сюрприз",
+        "Натхнення прийде вчасно",
+        "Усе складеться як треба",
+        "Буде привід усміхнутися"
+    ];
 
+    const rotorEl   = document.getElementById("rotor");
+    const cutoutsEl = document.getElementById("cutouts");
+    const resultEl  = document.getElementById("result");
+    const spinBtn   = document.getElementById("spinBtn");
+    const pointerEl = document.getElementById("pointer");
+
+    const SECTORS = 8;
+    const STEP = 360 / SECTORS;
+
+    // ----- лунки (“вирізи”) по секторам (крутяться разом з колесом) -----
+    function buildCutouts(){
+        cutoutsEl.innerHTML = "";
+        const radius = 0.36; // відносно радіуса колеса
+
+        for (let i = 0; i < SECTORS; i++){
+            const angle = -90 + (i * STEP) + STEP / 2;
+
+            const d = document.createElement("div");
+            d.className = "cutout";
+
+            d.style.transform = `
+        translate(-50%, -50%)
+        rotate(${angle}deg)
+        translateY(calc(var(--size) * -${radius}))
+      `;
+
+            cutoutsEl.appendChild(d);
+        }
+    }
+    buildCutouts();
+
+    // ----- допоміжні -----
+    let currentRotation = 0;
+    let isSpinning = false;
+    let isLockedForever = false;
+
+    function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function animateResult(text){
+        resultEl.classList.remove("pop");
+        void resultEl.offsetWidth;
+        resultEl.textContent = text;
+        resultEl.classList.add("pop");
+    }
+
+    function getSectorIndexFromRotation(rotationDeg){
+        const rot = ((rotationDeg % 360) + 360) % 360;
+        const angleUnderPointer = (360 - rot) % 360;
+        return Math.floor(angleUnderPointer / STEP);
+    }
+
+    function pointerTick(){
+        pointerEl.classList.remove("tick");
+        void pointerEl.offsetWidth;
+        pointerEl.classList.add("tick");
+    }
+
+    // ----- трекінг поточного кута ротора під час transition -----
+    function readRotationDeg(el){
+        const tr = getComputedStyle(el).transform;
+        if (!tr || tr === "none") return 0;
+        const m = tr.match(/matrix\(([^)]+)\)/);
+        if (!m) return 0;
+        const [a,b] = m[1].split(",").map(Number);
+        let deg = Math.atan2(b, a) * (180 / Math.PI);
+        deg = (deg + 360) % 360;
+        return deg;
+    }
+
+    // ----- конфетті (в різні сторони) -----
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas(){
+        canvas.width  = window.innerWidth * devicePixelRatio;
+        canvas.height = window.innerHeight * devicePixelRatio;
+        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function confettiBurst(durationMs = 1400){
+        const particles = [];
+        const count = 180;
+        const originX = window.innerWidth / 2;
+        const originY = Math.min(160, window.innerHeight * 0.22);
+
+        for (let i = 0; i < count; i++){
+            const speed = 3.5 + Math.random() * 9.5;
+            const angle = Math.random() * Math.PI * 2; // 0..360
+
+            particles.push({
+                x: originX, y: originY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                g: 0.18 + Math.random() * 0.22,
+                w: 4 + Math.random() * 5,
+                h: 6 + Math.random() * 7,
+                r: Math.random() * Math.PI,
+                vr: (-0.25 + Math.random() * 0.5),
+                ttl: durationMs * (0.85 + Math.random() * 0.35),
+                alpha: 1
+            });
+        }
+
+        const start = performance.now();
+
+        function frame(t){
+            const elapsed = t - start;
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+            for (const p of particles){
+                p.vy += p.g;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.r += p.vr;
+
+                const left = p.ttl - elapsed;
+                p.alpha = Math.max(0, Math.min(1, left / 500));
+
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.r);
+
+                const hue = (p.x*0.6 + p.y*0.4 + elapsed*0.08) % 360;
+                ctx.fillStyle = `hsl(${hue} 90% 60%)`;
+                ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+                ctx.restore();
+            }
+
+            if (elapsed < durationMs) requestAnimationFrame(frame);
+            else ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    // ----- spin + shake на межах секторів -----
+    function spin(){
+        if (isSpinning || isLockedForever) return;
+
+        isSpinning = true;
+        spinBtn.disabled = true;
+        animateResult("Крутимо...");
+
+        const extraSpins = randInt(4, 7) * 360;
+        const randomAngle = randInt(0, 359);
+        const startRotation = currentRotation;
+
+        currentRotation += extraSpins + randomAngle;
+        rotorEl.style.transform = `rotate(${currentRotation}deg)`;
+
+        // rAF: ловимо зміну сектора під стрілкою і робимо tick
+        let lastIdx = getSectorIndexFromRotation(startRotation);
+        let rafId = 0;
+
+        const watch = () => {
+            const rotNow = readRotationDeg(rotorEl); // 0..359
+            const idx = getSectorIndexFromRotation(rotNow);
+            if (idx !== lastIdx){
+                lastIdx = idx;
+                pointerTick();
+            }
+            if (isSpinning) rafId = requestAnimationFrame(watch);
+        };
+        rafId = requestAnimationFrame(watch);
+
+        window.setTimeout(() => {
+            cancelAnimationFrame(rafId);
+
+            const idx = getSectorIndexFromRotation(currentRotation);
+            const wish = WISHES[idx];
+
+            confettiBurst();
+            animateResult(`🎉 ✨ ${wish}`);
+
+            // блокуємо повторний спін
+            isLockedForever = true;
+            spinBtn.disabled = true;
+            spinBtn.textContent = "Готово";
+            isSpinning = false;
+        }, 4700);
+    }
+
+    spinBtn.addEventListener("click", spin);
+</script>
 </body>
 </html>
