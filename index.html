@@ -337,7 +337,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                     <label>
                         Що потрібно утеплити?
-                        <select name="insulation-type" required>
+                        <select name="insulation-type">
                             <option value="" disabled selected>Оберіть варіант</option>
                             <option value="house">Приватний будинок</option>
                             <option value="facade">Фасад багатоповерхівки</option>
@@ -348,7 +348,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                     <label>
                         Площа утеплення
-                        <input type="text" name="area" placeholder="Наприклад, 120 м²" required />
+                        <input type="text" name="area" placeholder="Наприклад, 120 м²" />
                     </label>
 
                     <label>
@@ -377,5 +377,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </section>
 </main>
+<script>
+    const quoteForm = document.querySelector(".quote-form");
+
+    quoteForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const phoneInput = quoteForm.querySelector('input[name="phone"]');
+        const phone = phoneInput.value.trim();
+
+        if (!phone) {
+            phoneInput.focus();
+            return;
+        }
+
+        window.location.href = "thank-you.html";
+    });
+</script>
 </body>
 </html>
