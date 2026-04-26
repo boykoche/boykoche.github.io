@@ -332,7 +332,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80" alt="Сучасний приватний будинок після утеплення фасаду" />
                 </div>
 
-                <form class="quote-form">
+                <form class="quote-form" action="thank-you.html" method="get">
                     <h2>Хочете дізнатися вартість утеплення? Розрахуйте онлайн!</h2>
 
                     <label>
@@ -377,22 +377,5 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </section>
 </main>
-<script>
-    const quoteForm = document.querySelector(".quote-form");
-
-    quoteForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const phoneInput = quoteForm.querySelector('input[name="phone"]');
-        const phone = phoneInput.value.trim();
-
-        if (!phone) {
-            phoneInput.focus();
-            return;
-        }
-
-        window.location.href = "thank-you.html";
-    });
-</script>
 </body>
 </html>
