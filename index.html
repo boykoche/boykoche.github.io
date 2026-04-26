@@ -2,450 +2,380 @@
 <html lang="uk">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Колесо побажань</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Утеплення будинків та фасадів у Києві</title>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TMCLB7J3');</script>
+    <!-- End Google Tag Manager -->
     <style>
-        :root { --size: 320px; }
-
-        body{
-            font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-            margin:0; min-height:100vh; display:grid; place-items:center;
-            background:#0f172a; color:#e2e8f0;
-            overflow:hidden;
-        }
-        .wrap{ width:min(92vw,520px); text-align:center; }
-        h1{ font-size:20px; margin:0 0 12px; font-weight:650; }
-
-        .wheel-area{
-            position:relative;
-            display:grid;
-            place-items:center;
-            margin:16px auto;
-            width: var(--size);
-            height: var(--size);
-            transform: perspective(900px);
+        :root {
+            --bg: #ffffff;
+            --surface: #f6efe4;
+            --text: #2a2a2a;
+            --muted: #757575;
+            --line: #e8e8e8;
+            --accent: #f28c28;
+            --accent-hover: #df7c1c;
+            --section: #f8f8f8;
+            --container: 1160px;
         }
 
-        .pointer{
-            position:absolute; top:-12px; left:50%;
-            transform:translateX(-50%);
-            width:0; height:0;
-            border-left: 12px solid transparent;
-            border-right:12px solid transparent;
-            border-bottom:18px solid #fbbf24;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,.35));
-            z-index: 60;
-            transform-origin: 50% 100%;
+        * {
+            box-sizing: border-box;
         }
 
-        /* короткий “shake” стрілки */
-        .pointer.tick{
-            animation: pointerTick 110ms ease-out both;
-        }
-        @keyframes pointerTick{
-            0%   { transform: translateX(-50%) rotate(0deg); }
-            35%  { transform: translateX(-50%) rotate(-7deg); }
-            70%  { transform: translateX(-50%) rotate(5deg); }
-            100% { transform: translateX(-50%) rotate(0deg); }
+        body {
+            margin: 0;
+            font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
         }
 
-        /* основа/“товщина” */
-        .wheel-base{
-            position:absolute; inset:0;
-            border-radius:50%;
-            background:
-                    radial-gradient(circle at 35% 28%, rgba(255,255,255,.10), transparent 48%),
-                    radial-gradient(circle at 50% 78%, rgba(0,0,0,.55), transparent 60%),
-                    linear-gradient(to bottom, rgba(255,255,255,.06), rgba(0,0,0,.22));
-            transform: translateY(12px) rotateX(10deg);
-            z-index: 1;
-            box-shadow: 0 28px 70px rgba(0,0,0,.55);
+        .container {
+            width: min(calc(100% - 48px), var(--container));
+            margin: 0 auto;
         }
 
-        /* ротор (крутиться все всередині) */
-        .wheel-rotor{
-            position:absolute; inset:0;
-            border-radius:50%;
-            z-index: 10;
-            transform: rotate(0deg) translateZ(0);
-            transition: transform 4.6s cubic-bezier(.14,.86,.18,1.08);
-            will-change: transform;
+        .site-header {
+            border-bottom: 1px solid var(--line);
+            background: #fff;
         }
 
-        /* кольорове колесо */
-        .wheel-face{
-            position:absolute; inset:0;
-            border-radius:50%;
-            background: conic-gradient(
-                    from -90deg,
-                    #a78bfa 0deg 45deg,
-                    #22d3ee 45deg 90deg,
-                    #f472b6 90deg 135deg,
-                    #4ade80 135deg 180deg,
-                    #60a5fa 180deg 225deg,
-                    #34d399 225deg 270deg,
-                    #fbbf24 270deg 315deg,
-                    #fb7185 315deg 360deg
-            );
-            box-shadow:
-                    0 0 0 10px rgba(255,255,255,.09),
-                    0 20px 60px rgba(0,0,0,.45),
-                    inset 0 0 22px rgba(15,23,42,.95);
-            overflow:hidden;
-            z-index: 10;
+        .header-inner {
+            min-height: 84px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 20px;
         }
 
-        /* Заглиблення між секторами (канавки по межах) */
-        .wheel-grooves{
-            position:absolute; inset:0;
-            border-radius:50%;
-            pointer-events:none;
-            z-index: 20;
-            background:
-                    repeating-conic-gradient(
-                            from -90deg,
-                            rgba(0,0,0,.48) 0deg 0.9deg,
-                            rgba(255,255,255,.10) 0.9deg 1.7deg,
-                            transparent 1.7deg 45deg
-                    );
-            opacity: .95;
-            filter: blur(.25px);
-            box-shadow: inset 0 0 18px rgba(0,0,0,.35);
-            mix-blend-mode: multiply;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
-        /* “Вирізи” (лунки) в кожному секторі */
-        .cutouts{
-            position:absolute; inset:0;
-            border-radius:50%;
-            pointer-events:none;
-            z-index: 30;
-        }
-        .cutout{
-            position:absolute;
-            left:50%;
-            top:50%;
-            width:22px;
-            height:22px;
-            border-radius: 50%;
-
-            /* КЛЮЧОВЕ: центр елемента = центр трансформацій */
-            transform-origin: 50% 50%;
-
-            background: rgba(0,0,0,.28);
-            mix-blend-mode: multiply;
-
-            box-shadow:
-                    inset 0 2px 5px rgba(0,0,0,.55),
-                    inset 0 -1px 3px rgba(255,255,255,.08);
-
-            border: 1px solid rgba(255,255,255,.08);
+        .brand-icon {
+            width: 24px;
+            height: 24px;
+            fill: var(--accent);
+            flex: 0 0 auto;
         }
 
-        /* Загальний глянець/обʼєм на ВСЬОМУ колесі */
-        .wheel-volume{
-            position:absolute; inset:0;
-            border-radius:50%;
-            pointer-events:none;
-            z-index: 40;
-            background:
-                    radial-gradient(circle at 28% 22%, rgba(255,255,255,.26), transparent 45%),
-                    radial-gradient(circle at 50% 58%, rgba(0,0,0,.60) 62%, transparent 88%),
-                    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06) 0, transparent 55%);
-            box-shadow: inset 0 0 28px rgba(0,0,0,.65);
-            mix-blend-mode: screen;
-            opacity: .95;
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 26px;
         }
 
-        .hub{
-            position:absolute; left:50%; top:50%;
-            transform:translate(-50%,-50%);
-            width: 88px; height: 88px;
-            border-radius:50%;
-            background: rgba(15,23,42,.86);
-            border: 2px solid rgba(255,255,255,.14);
-            display:grid; place-items:center;
-            z-index: 55;
-            backdrop-filter: blur(6px);
-            box-shadow:
-                    inset 0 10px 18px rgba(255,255,255,.06),
-                    inset 0 -12px 18px rgba(0,0,0,.35);
+        .top-nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
         }
 
-        button{
-            appearance:none; border:0; cursor:pointer;
-            padding:12px 16px; border-radius:14px;
-            background:#38bdf8; color:#082f49; font-weight:800;
-            box-shadow: 0 10px 30px rgba(56,189,248,.25);
-            transition: transform .12s ease;
-        }
-        button:active{ transform: translateY(1px) scale(.99); }
-        button:disabled{ opacity:.55; cursor:not-allowed; }
-
-        .result{
-            margin-top:14px;
-            padding:14px 16px;
-            border-radius:16px;
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.10);
-            min-height: 52px;
-            display:grid; place-items:center;
-            position: relative;
+        .top-nav a:hover {
+            color: var(--accent);
         }
 
-        .result.pop{ animation: popIn .55s cubic-bezier(.2,.9,.2,1.2) both; }
-        @keyframes popIn{
-            0%   { transform: translateY(8px) scale(.94); opacity: .2; }
-            60%  { transform: translateY(-2px) scale(1.03); opacity: 1; }
-            100% { transform: translateY(0) scale(1); }
+        .header-phone {
+            justify-self: end;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 20px;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
         }
 
-        #confetti{
-            position: fixed;
-            inset: 0;
-            pointer-events:none;
-            z-index: 999;
+        .header-phone:hover {
+            background: var(--accent-hover);
+        }
+
+        .hero {
+            padding: 58px 0 80px;
+        }
+
+        .hero-title {
+            margin: 0 0 34px;
+            max-width: 880px;
+            font-size: clamp(32px, 5vw, 50px);
+            line-height: 1.14;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 28px;
+            align-items: stretch;
+        }
+
+        .hero-image {
+            min-height: 440px;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 15px 32px rgba(24, 24, 24, 0.08);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .quote-form {
+            background: var(--surface);
+            border: 1px solid #ecdfcd;
+            border-radius: 18px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .quote-form h2 {
+            margin: 0 0 18px;
+            font-size: 27px;
+            line-height: 1.25;
+            font-weight: 800;
+        }
+
+        .quote-form label {
+            display: block;
+            margin-bottom: 13px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #4a4a4a;
+        }
+
+        .quote-form input,
+        .quote-form select {
+            width: 100%;
+            margin-top: 6px;
+            height: 48px;
+            border: 1px solid #dbc9af;
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+            padding: 0 14px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .quote-form input:focus,
+        .quote-form select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(242, 140, 40, 0.15);
+        }
+
+        .cta-button {
+            margin-top: 8px;
+            height: 54px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .accent-note {
+            margin: 12px 0 0;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .benefits {
+            background: var(--section);
+            padding: 72px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .benefits h2 {
+            margin: 0 0 24px;
+            font-size: 34px;
+        }
+
+        .benefits-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 14px;
+        }
+
+        .benefits-list li {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #3a3a3a;
+        }
+
+        .benefits-list li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: 900;
+            font-size: 20px;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-image {
+                min-height: 340px;
+            }
+        }
+
+        @media (max-width: 780px) {
+            .container {
+                width: min(calc(100% - 32px), var(--container));
+            }
+
+            .header-inner {
+                grid-template-columns: 1fr;
+                justify-items: start;
+                gap: 14px;
+                padding: 14px 0;
+            }
+
+            .top-nav {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .header-phone {
+                justify-self: start;
+            }
+
+            .hero {
+                padding: 34px 0 56px;
+            }
+
+            .hero-title {
+                margin-bottom: 24px;
+            }
+
+            .quote-form h2 {
+                font-size: 23px;
+            }
+
+            .benefits {
+                padding: 56px 0;
+            }
+
+            .benefits h2 {
+                font-size: 29px;
+            }
         }
     </style>
 </head>
 <body>
-<canvas id="confetti"></canvas>
-
-<div class="wrap">
-    <h1>Колесо побажань 🎡</h1>
-
-    <div class="wheel-area">
-        <div id="pointer" class="pointer"></div>
-        <div class="wheel-base"></div>
-
-        <div id="rotor" class="wheel-rotor">
-            <div class="wheel-face"></div>
-            <div class="wheel-grooves"></div>
-            <div id="cutouts" class="cutouts"></div>
-            <div class="wheel-volume"></div>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMCLB7J3"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="brand">
+            <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3L2 11h2v9h6v-6h4v6h6v-9h2L12 3zm0 2.6L18 11v7h-2v-6H8v6H6v-7l6-5.4z"></path>
+            </svg>
+            <span>ТеплоДім Сервіс</span>
         </div>
 
-        <div class="hub">
-            <button id="spinBtn">Крутити</button>
-        </div>
+        <nav class="top-nav" aria-label="Головне меню">
+            <a href="#hero">Утеплення будинків</a>
+            <a href="#hero">Утеплення фасадів</a>
+        </nav>
+
+        <a class="header-phone" href="tel:+380671234567">+38 (067) 123-45-67</a>
     </div>
+</header>
 
-    <div id="result" class="result">Натисни “Крутити”, щоб отримати побажання ✨</div>
-</div>
+<main>
+    <section class="hero" id="hero">
+        <div class="container">
+            <h1 class="hero-title">Утеплення будинків та фасадів у Києві та області за 7 днів</h1>
 
-<script>
-    const WISHES = [
-        "У новому році ваші уроки проходитимуть так захопливо, що дзвінок заважатиме",
-        "Журнал частіше радуватиме, ніж дивуватиме",
-        "Учні несподівано почнуть виконувати домашні завдання вчасно",
-        "Методичні ідеї приходитимуть раніше, ніж кава охолоне",
-        "На педрадах буде більше посмішок, ніж зауважень",
-        "Уроки стануть прикладом для наслідування навіть для колег",
-        "Ваша професійна впевненість зростатиме з кожним місяцем",
-        "Класний керівник у вас — золото (навіть якщо це ви самі)",
-        "Ви встигатимете заповнити «Мрію», доки не вимкнуть світло",
-        "Усі плани та звіти складатимуться легко і без нічних пригод",
-        "У новому році ви відкриєте в собі ще один педагогічний талант",
-        "Навіть складні теми стануть зрозумілими вашим дітям із першого разу",
-        "Батьківські збори проходитимуть у дружній атмосфері, але не точно",
-        "Ваш авторитет серед учнів зросте раніше, аніж Обленерго надішле графіки відключень",
-        "У кабінет заступників ви заходитиме тільки за булочками, але не постійно",
-        "Учні не запізнюватимуться на ваші уроки, але тільки якщо урок на другу зміну",
-        "Колеги частіше звертатимуться за порадою, а ще частіше за допомогою",
-        "Успіхи учнів стануть найкращою нагородою, а потім уже і зарплата",
-        "Заробітна плата зросте, але невідомо на скільки",
-        "Ваша праця буде помічена і гідно оцінена, адміністрацією так точно",
-        "Навіть понеділки стануть продуктивними, але це тільки влітку",
-        "У вас завжди будуть ідеї, чим зайняти дітей і укритті",
-        "Ваших дітей з укриття завжди забиратимуть вчасно",
-        "Можливо, у холі гімназії поставлять кавовий автомат, і у вас буде знижка на еспресо"
-    ];
+            <div class="hero-grid">
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80" alt="Сучасний приватний будинок після утеплення фасаду" />
+                </div>
 
-    const rotorEl   = document.getElementById("rotor");
-    const cutoutsEl = document.getElementById("cutouts");
-    const resultEl  = document.getElementById("result");
-    const spinBtn   = document.getElementById("spinBtn");
-    const pointerEl = document.getElementById("pointer");
+                <form class="quote-form">
+                    <h2>Хочете дізнатися вартість утеплення? Розрахуйте онлайн!</h2>
 
-    const SECTORS = 8;
-    const STEP = 360 / SECTORS;
+                    <label>
+                        Що потрібно утеплити?
+                        <select name="insulation-type" required>
+                            <option value="" disabled selected>Оберіть варіант</option>
+                            <option value="house">Приватний будинок</option>
+                            <option value="facade">Фасад багатоповерхівки</option>
+                            <option value="apartment">Квартира (зовнішнє утеплення)</option>
+                            <option value="other">Інше</option>
+                        </select>
+                    </label>
 
-    // ----- лунки (“вирізи”) по секторам (крутяться разом з колесом) -----
-    function buildCutouts(){
-        cutoutsEl.innerHTML = "";
-        const radius = 0.36; // відносно радіуса колеса
+                    <label>
+                        Площа утеплення
+                        <input type="text" name="area" placeholder="Наприклад, 120 м²" required />
+                    </label>
 
-        for (let i = 0; i < SECTORS; i++){
-            const angle = -90 + (i * STEP) + STEP / 2;
+                    <label>
+                        Ваш номер телефону
+                        <input type="tel" name="phone" placeholder="+38 (0__) ___-__-__" required />
+                    </label>
 
-            const d = document.createElement("div");
-            d.className = "cutout";
+                    <button class="cta-button" type="submit">Отримати розрахунок</button>
+                    <p class="accent-note">Безкоштовний виїзд замірника по Києву!</p>
+                </form>
+            </div>
+        </div>
+    </section>
 
-            d.style.transform = `
-        translate(-50%, -50%)
-        rotate(${angle}deg)
-        translateY(calc(var(--size) * -${radius}))
-      `;
-
-            cutoutsEl.appendChild(d);
-        }
-    }
-    buildCutouts();
-
-    // ----- допоміжні -----
-    let currentRotation = 0;
-    let isSpinning = false;
-    let isLockedForever = false;
-
-    function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-    function animateResult(text){
-        resultEl.classList.remove("pop");
-        void resultEl.offsetWidth;
-        resultEl.textContent = text;
-        resultEl.classList.add("pop");
-    }
-
-    function getSectorIndexFromRotation(rotationDeg){
-        const rot = ((rotationDeg % 360) + 360) % 360;
-        const angleUnderPointer = (360 - rot) % 360;
-        return Math.floor(angleUnderPointer / STEP);
-    }
-
-    function pointerTick(){
-        pointerEl.classList.remove("tick");
-        void pointerEl.offsetWidth;
-        pointerEl.classList.add("tick");
-    }
-
-    // ----- трекінг поточного кута ротора під час transition -----
-    function readRotationDeg(el){
-        const tr = getComputedStyle(el).transform;
-        if (!tr || tr === "none") return 0;
-        const m = tr.match(/matrix\(([^)]+)\)/);
-        if (!m) return 0;
-        const [a,b] = m[1].split(",").map(Number);
-        let deg = Math.atan2(b, a) * (180 / Math.PI);
-        deg = (deg + 360) % 360;
-        return deg;
-    }
-
-    // ----- конфетті (в різні сторони) -----
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
-
-    function resizeCanvas(){
-        canvas.width  = window.innerWidth * devicePixelRatio;
-        canvas.height = window.innerHeight * devicePixelRatio;
-        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    function confettiBurst(durationMs = 1400){
-        const particles = [];
-        const count = 180;
-        const originX = window.innerWidth / 2;
-        const originY = Math.min(160, window.innerHeight * 0.22);
-
-        for (let i = 0; i < count; i++){
-            const speed = 3.5 + Math.random() * 9.5;
-            const angle = Math.random() * Math.PI * 2; // 0..360
-
-            particles.push({
-                x: originX, y: originY,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                g: 0.18 + Math.random() * 0.22,
-                w: 4 + Math.random() * 5,
-                h: 6 + Math.random() * 7,
-                r: Math.random() * Math.PI,
-                vr: (-0.25 + Math.random() * 0.5),
-                ttl: durationMs * (0.85 + Math.random() * 0.35),
-                alpha: 1
-            });
-        }
-
-        const start = performance.now();
-
-        function frame(t){
-            const elapsed = t - start;
-            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-            for (const p of particles){
-                p.vy += p.g;
-                p.x += p.vx;
-                p.y += p.vy;
-                p.r += p.vr;
-
-                const left = p.ttl - elapsed;
-                p.alpha = Math.max(0, Math.min(1, left / 500));
-
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.r);
-
-                const hue = (p.x*0.6 + p.y*0.4 + elapsed*0.08) % 360;
-                ctx.fillStyle = `hsl(${hue} 90% 60%)`;
-                ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-                ctx.restore();
-            }
-
-            if (elapsed < durationMs) requestAnimationFrame(frame);
-            else ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        }
-        requestAnimationFrame(frame);
-    }
-
-    // ----- spin + shake на межах секторів -----
-    function spin(){
-        if (isSpinning || isLockedForever) return;
-
-        isSpinning = true;
-        spinBtn.disabled = true;
-        animateResult("Крутимо...");
-
-        const extraSpins = randInt(4, 7) * 360;
-        const randomAngle = randInt(0, 359);
-        const startRotation = currentRotation;
-
-        currentRotation += extraSpins + randomAngle;
-        rotorEl.style.transform = `rotate(${currentRotation}deg)`;
-
-        // rAF: ловимо зміну сектора під стрілкою і робимо tick
-        let lastIdx = getSectorIndexFromRotation(startRotation);
-        let rafId = 0;
-
-        const watch = () => {
-            const rotNow = readRotationDeg(rotorEl); // 0..359
-            const idx = getSectorIndexFromRotation(rotNow);
-            if (idx !== lastIdx){
-                lastIdx = idx;
-                pointerTick();
-            }
-            if (isSpinning) rafId = requestAnimationFrame(watch);
-        };
-        rafId = requestAnimationFrame(watch);
-
-        window.setTimeout(() => {
-            cancelAnimationFrame(rafId);
-
-            const idx = getSectorIndexFromRotation(currentRotation);
-            const wish = WISHES[idx];
-
-            confettiBurst();
-            animateResult(`🎉 ✨ ${wish}`);
-
-            // блокуємо повторний спін
-            isLockedForever = true;
-            spinBtn.disabled = true;
-            spinBtn.textContent = "Готово";
-            isSpinning = false;
-        }, 4700);
-    }
-
-    spinBtn.addEventListener("click", spin);
-</script>
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <h2>Наші переваги</h2>
+            <ul class="benefits-list">
+                <li>Надійна компанія — багаторічний досвід у сфері утеплення</li>
+                <li>Якісні матеріали — використовуємо перевірені сучасні матеріали</li>
+                <li>Власне обладнання — усе необхідне для швидкого та якісного монтажу</li>
+                <li>Акуратне виконання робіт — залишаємо об’єкт чистим після завершення</li>
+                <li>Швидкі терміни — виконуємо утеплення у короткі строки</li>
+                <li>Гарантія якості — надаємо гарантію на виконані роботи</li>
+            </ul>
+        </div>
+    </section>
+</main>
 </body>
 </html>
