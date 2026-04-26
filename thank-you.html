@@ -33,8 +33,10 @@
             font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
             background: var(--bg);
             color: var(--text);
-            display: grid;
-            place-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             padding: 24px;
         }
 
@@ -91,6 +93,13 @@
         .back-link:hover {
             background: var(--accent-hover);
         }
+
+        .site-footer {
+            margin-top: 28px;
+            color: var(--muted);
+            font-size: 14px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -102,5 +111,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Ваш відгук успішно надіслано. Наш менеджер зв’яжеться з вами протягом 15 хвилин у робочий час, щоб уточнити деталі та надати розрахунок.</p>
     <a class="back-link" href="index.html">Повернутися на головну</a>
 </main>
+<footer class="site-footer">Версія сайту: 0.0.1</footer>
 </body>
 </html>
